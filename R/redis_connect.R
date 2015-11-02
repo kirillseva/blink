@@ -4,7 +4,7 @@
 redis_connect <- function() {
   tryCatch(nzchar(rredis::redisCMD('PING')), error = function(...) {
     redis.yml <- getOption('blink.redis.yml')
-    if (is.NULL(redis.yml)) {
+    if (is.null(redis.yml)) {
       stop(
         'Please set option `blink.redis.yml` to be able to use blink. ',
         'An example would look like:\n',
