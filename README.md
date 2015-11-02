@@ -1,4 +1,4 @@
-blink: Persistent memoization layer
+blink: Persistent memoization layer [![Build Status](https://travis-ci.org/kirillseva/blink.svg?branch=master)](https://travis-ci.org/kirillseva/blink) [![codecov.io](https://codecov.io/github/kirillseva/blink/coverage.svg?branch=master)](https://codecov.io/github/kirillseva/blink?branch=master)
 ===========
 
 Retrieve the result of your computation faster than you can blink!
