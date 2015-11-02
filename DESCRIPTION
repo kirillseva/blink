@@ -1,0 +1,20 @@
+Package: blink
+Type: Package
+Title: blink (http://github.com/kirillseva/blink)
+Description: Describe the package.
+Version: 0.1.0
+Author: Kirill Sevastyanenko <kirillseva@gmail.com>
+Maintainer: Kirill Sevastyanenko <kirillseva@gmail.com>
+Authors@R: c(person("Kirill", "Sevastyanenko",
+    email = "kirillseva@gmail.com", role = c("aut", "cre")))
+Depends:
+    R (>= 3.0.1)
+License: MIT
+LazyData: true
+Imports:
+    stringr
+Suggests:
+    knitr,
+    microbenchmark,
+    testthat
+Roxygen: list(wrap = FALSE)
