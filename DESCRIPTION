@@ -16,5 +16,6 @@ Imports:
     yaml
 Suggests:
     microbenchmark,
-    testthat
+    testthat,
+    devtools
 Roxygen: list(wrap = FALSE)
