@@ -1,8 +1,8 @@
 Package: blink
 Type: Package
 Title: blink (http://github.com/kirillseva/blink)
-Description: Describe the package.
-Version: 0.1.0
+Description: Redis-backed memoization.
+Version: 0.0.0.9000
 Author: Kirill Sevastyanenko <kirillseva@gmail.com>
 Maintainer: Kirill Sevastyanenko <kirillseva@gmail.com>
 Authors@R: c(person("Kirill", "Sevastyanenko",
@@ -12,9 +12,8 @@ Depends:
 License: MIT
 LazyData: true
 Imports:
-    stringr
+    rredis
 Suggests:
-    knitr,
     microbenchmark,
     testthat
 Roxygen: list(wrap = FALSE)

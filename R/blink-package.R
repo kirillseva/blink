@@ -1,6 +1,6 @@
 #' Describe the package.
 #'
 #' @name blink
-#' @import stringr
+#' @import rredis
 #' @docType package
 NULL
