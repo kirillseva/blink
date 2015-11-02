@@ -12,7 +12,8 @@ Depends:
 License: MIT
 LazyData: true
 Imports:
-    rredis
+    rredis,
+    yaml
 Suggests:
     microbenchmark,
     testthat
