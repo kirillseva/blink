@@ -2,7 +2,7 @@
 # Set proper options for connecting to redis #
 ##############################################
 redis_connect <- function() {
-  tryCatch(nzchar(rredis::redisCMD('PING')), error = function(...) {
+  tryCatch(nzchar(rredis::redisCmd('PING')), error = function(e) {
     redis.yml <- getOption('blink.redis.yml')
     if (is.null(redis.yml)) {
       stop(
