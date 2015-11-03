@@ -13,7 +13,8 @@ License: MIT
 LazyData: true
 Imports:
     rredis,
-    yaml
+    yaml,
+    crayon
 Suggests:
     microbenchmark,
     testthat,

@@ -4,7 +4,7 @@ Let's say you work for an internet radio and you have a function that fetches da
 from network to further analyze in R.
 
 ```r
-my_expensive_function <- function(ids, type, params, ...) {
+my_expensive_function <- function(id, type, params, ...) {
   match.arg(type, c('user', 'playlist', 'artist', 'song'))
   tmp <- pull_info_from_network(ids, type, params)
   tmp <- complex_transformation(tmp, ...)
