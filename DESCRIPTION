@@ -14,7 +14,9 @@ LazyData: true
 Imports:
     rredis,
     yaml,
-    crayon
+    crayon,
+    digest,
+    plyr
 Suggests:
     microbenchmark,
     testthat,

@@ -1,3 +1,5 @@
+#' Decorate the slow function to enable caching
+#'
 #' @export
 decorate <- function(fun, salt, type, id_col = 'id') {
   verify_args(fun, salt, type, id_col)
@@ -7,6 +9,13 @@ decorate <- function(fun, salt, type, id_col = 'id') {
 
 make_cached_fn <- function(fun, salt, type, id_col) {
   ## Let's create a new function that will do our bidding
+  ## A function is fully defined by
+  ## - formals
+  ## - body
+  ## - environment
+  ##
+  ## Let's perform some surgery and manually construct a function
+  ## from those building blocks
   cached_fn <- new("function")
   ## We will also inject ellipsis (`...`) for additional
   ## arguments in case we want to add them, like
@@ -16,10 +25,11 @@ make_cached_fn <- function(fun, salt, type, id_col) {
   if(!any(grepl("...", names(formals(fun))))) {
     formals(cached_fn) <- c(formals(fun), unlist(alist(... = )))
   } else { formals(cached_fn) <- formals(fun) }
-  body(cached_fn) <- make_body_fn()
   env(cached_fn) <- list2env(list(
-    `__fun` = fun, `__salt` = salt, `__type` = type, `__id_col` = id_col
+    `__fun` = fun, `__salt` = salt, `__type` = type,
+    `__id_col` = id_col, `__name` = name
   ), parent = environment(fun))
+  body(cached_fn) <- make_body_fn()
   class(cached_fn) <- c(class(cached_fn), 'blink_cached_fn')
   cached_fn
 }
@@ -28,7 +38,37 @@ make_body_fn <- function() {
   quote({
     raw_call <- match.call()
     call     <- as.list(raw_call[-1])
+    for (name in names(call)) {
+      call[[name]] <- eval.parent(call[[name]])
+    }
 
-    ids <- call[[`__id_col`]]
+    ## extract metadata from environment for convenience
+    ids       <- call[[`__id_col`]]
+    type      <- call[[`__type`]]
+    fun       <- call[[`__fun`]]
+    ## for salt it's a little bit interesting
+    ## we want to take a hash of all params that are part of the salt
+    ## and it should be deterministic with respect to sorting
+    ## Here we rely on the fact that when we subset the list we will get
+    ## the results in the same order as `__salt`
+    salt <- digest::digest(call[`__salt`])
+    ## make sure ids are not NA
+    stopifnot(all(!is.na(ids)) && length(ids) > 0)
+
+    ## lapply over all ids and retrieve data
+    result <- lapply(ids, function(i) {
+      key <- make_key(i, type)
+      if (blink:::`exists_in_cache?`(key, salt)) {
+        blink:::get_from_cache(key, salt)
+      } else {
+        args <- call
+        args[[`__id_col`]] <- i
+        vapply(BANNED_NAMES, function(nm) { args[[nm]] <<- NULL; TRUE }, logical(1))
+        content <- do.call(fun, args)
+        blink:::set_cache(key, salt, content)
+        content
+      }
+    }, type = type)
+    plyr::rbind.fill(result)
   })
 }
