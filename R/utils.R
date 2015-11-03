@@ -3,14 +3,13 @@ verify_args <- function(fun, salt, type, id_col) {
   stopifnot(is.character(salt))
   stopifnot(is.simple_string(type))
   stopifnot(is.simple_string(id_col))
-  stopifnot(is.simple_string(name))
 }
 
 is.simple_string <- function(st) {
   is.character(st) &&
   length(st) == 1 &&
-  nzchar(string) &&
-  !is.na(string)
+  nzchar(st) &&
+  !is.na(st)
 }
 
 BANNED_NAMES <- c(
@@ -20,7 +19,7 @@ BANNED_NAMES <- c(
 verify_formals <- function(fun) {
   ## For any injected arguments by blink we should make sure
   ## there are no argument collisions
-  vapply(formals(fun), function(nm) {
+  vapply(names(formals(fun)), function(nm) {
     if (nm %in% BANNED_NAMES) {
       stop("Please rename your function's argument `", crayon::red(nm),
       "` as this argument is reserved by blink package.")

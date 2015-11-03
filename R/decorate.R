@@ -1,7 +1,7 @@
 #' Decorate the slow function to enable caching
 #'
 #' @export
-decorate <- function(fun, salt, type, id_col = 'id') {
+decorate <- function(fun, salt, type = 'type', id_col = 'id') {
   verify_args(fun, salt, type, id_col)
   verify_formals(fun)
   make_cached_fn(fun, salt, type, id_col)
@@ -25,9 +25,8 @@ make_cached_fn <- function(fun, salt, type, id_col) {
   if(!any(grepl("...", names(formals(fun))))) {
     formals(cached_fn) <- c(formals(fun), unlist(alist(... = )))
   } else { formals(cached_fn) <- formals(fun) }
-  env(cached_fn) <- list2env(list(
-    `__fun` = fun, `__salt` = salt, `__type` = type,
-    `__id_col` = id_col, `__name` = name
+  environment(cached_fn) <- list2env(list(
+    `__fun` = fun, `__salt` = salt, `__type` = type, `__id_col` = id_col
   ), parent = environment(fun))
   body(cached_fn) <- make_body_fn()
   class(cached_fn) <- c(class(cached_fn), 'blink_cached_fn')
@@ -45,7 +44,7 @@ make_body_fn <- function() {
     ## extract metadata from environment for convenience
     ids       <- call[[`__id_col`]]
     type      <- call[[`__type`]]
-    fun       <- call[[`__fun`]]
+    fun       <- `__fun`
     ## for salt it's a little bit interesting
     ## we want to take a hash of all params that are part of the salt
     ## and it should be deterministic with respect to sorting
@@ -56,7 +55,7 @@ make_body_fn <- function() {
     stopifnot(all(!is.na(ids)) && length(ids) > 0)
 
     ## lapply over all ids and retrieve data
-    result <- lapply(ids, function(i) {
+    result <- lapply(ids, function(i, type) {
       key <- make_key(i, type)
       if (blink:::`exists_in_cache?`(key, salt)) {
         blink:::get_from_cache(key, salt)
