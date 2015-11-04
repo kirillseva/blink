@@ -9,5 +9,7 @@ r_github_packages:
   - jimhester/covr
   - hadley/devtools
   - bwlewis/rredis
+  - hadley/plyr
+  - hadley/dplyr
 after_success:
   - Rscript -e 'covr::codecov()'

@@ -16,7 +16,7 @@ Imports:
     yaml,
     crayon,
     digest,
-    plyr
+    dplyr
 Suggests:
     microbenchmark,
     testthat,

@@ -8,15 +8,19 @@
 #'   original function that modify the results. For example, in
 #'   get_movie_details(id = 100, type = 'film', extended_details = TRUE)
 #'   extended_details set to true might be returning a larger dataframe.
+#' @param strategy function. Blink will turn your function into a vectorized
+#'   version, and will use this function to recombine the results.
+#'   Default is dplyr::bind_rows %>% as.data.frame
 #'
 #' @export
-decorate <- function(fun, salt = NULL, type = 'type', id_col = 'id') {
-  verify_args(fun, salt, type, id_col)
+decorate <- function(fun, salt = NULL, type = 'type', id_col = 'id',
+    strategy = function(...) as.data.frame(dplyr::bind_rows(...))) {
+  verify_args(fun, salt, type, id_col, strategy)
   verify_formals(fun)
-  make_cached_fn(fun, salt, type, id_col)
+  make_cached_fn(fun, salt, type, id_col, strategy)
 }
 
-make_cached_fn <- function(fun, salt, type, id_col) {
+make_cached_fn <- function(fun, salt, type, id_col, strategy) {
   ## Let's create a new function that will do our bidding
   ## A function is fully defined by
   ## - formals
@@ -35,7 +39,8 @@ make_cached_fn <- function(fun, salt, type, id_col) {
     formals(cached_fn) <- c(formals(fun), unlist(alist(... = )))
   } else { formals(cached_fn) <- formals(fun) }
   environment(cached_fn) <- list2env(list(
-    `__fun` = fun, `__salt` = salt, `__type` = type, `__id_col` = id_col
+    `__fun` = fun, `__salt` = salt, `__type` = type,
+    `__id_col` = id_col, `__strategy` = strategy
   ), parent = environment(fun))
   body(cached_fn) <- make_body_fn()
   class(cached_fn) <- c(class(cached_fn), 'blink_cached_fn')
@@ -54,6 +59,7 @@ make_body_fn <- function() {
     ids       <- call[[`__id_col`]]
     type      <- call[[`__type`]]
     fun       <- `__fun`
+    strategy  <- `__strategy`
     ## for salt it's a little bit interesting
     ## we want to take a hash of all params that are part of the salt
     ## and it should be deterministic with respect to sorting
@@ -77,6 +83,6 @@ make_body_fn <- function() {
         content
       }
     }, type = type)
-    plyr::rbind.fill(result)
+    strategy(result)
   })
 }

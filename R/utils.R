@@ -1,5 +1,6 @@
-verify_args <- function(fun, salt, type, id_col) {
+verify_args <- function(fun, salt, type, id_col, strategy) {
   stopifnot(is.function(fun))
+  stopifnot(is.function(strategy))
   stopifnot((is.character(salt) && Negate(any)(is.na(salt))) || is.null(salt))
   stopifnot(is.simple_string(type))
   stopifnot(is.simple_string(id_col))
