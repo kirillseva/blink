@@ -1,0 +1,17 @@
+.Rapp.history$
+vignettes/*.html
+**/.DS_Store
+packrat/lib*/
+.Rhistory
+*.Rout
+src/*.o
+src/*.so
+.sampleRprofile
+.samples3cfg
+*.so
+*.o
+*.gcno
+inst/doc
+tests/testthat/Rplots.pdf
+R/.Rapp.history
+.Rapp.history
