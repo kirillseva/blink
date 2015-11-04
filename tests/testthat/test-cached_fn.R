@@ -64,7 +64,9 @@ describe('Cached function is fast and has same results', {
       ROWS <- 1e4
       tmp <- cached_fn('author', 1:ROWS, '2000')
       expect_equal(dim(tmp), c(ROWS, 2))
-      expect_equal(tmp, cached_fn('author', 1:ROWS, '2000'))
+      is_faster_than(0.5,
+        expect_equal(tmp, cached_fn('author', 1:ROWS, '2000'))
+      )
     })
   })
 })

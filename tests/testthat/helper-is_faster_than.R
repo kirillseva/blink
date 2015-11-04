@@ -1,3 +1,3 @@
 is_faster_than <- function(seconds, expr) {
-  expect_true(takes_less_than(seconds)(eval(expr)))
+  expect_less_than(system.time(eval(expr))['elapsed'], seconds)
 }
