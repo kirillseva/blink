@@ -1,6 +1,6 @@
 verify_args <- function(fun, salt, type, id_col) {
   stopifnot(is.function(fun))
-  stopifnot(is.character(salt))
+  stopifnot((is.character(salt) && Negate(any)(is.na(salt))) || is.null(salt))
   stopifnot(is.simple_string(type))
   stopifnot(is.simple_string(id_col))
 }
@@ -31,5 +31,5 @@ verify_formals <- function(fun) {
 make_key <- function(id, type) {
   stopifnot(length(id) == 1)
   stopifnot(is.simple_string(type))
-  paste0(id, ":", type)
+  paste0(type, ":", id)
 }

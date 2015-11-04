@@ -4,7 +4,20 @@
 \alias{decorate}
 \title{Decorate the slow function to enable caching}
 \usage{
-decorate(fun, salt, type = "type", id_col = "id")
+decorate(fun, salt = NULL, type = "type", id_col = "id")
+}
+\arguments{
+\item{fun}{function. Function to be wrapped around a caching layer.}
+
+\item{salt}{character. The names of the other parameters to be supplied to the
+  original function that modify the results. For example, in
+  get_movie_details(id = 100, type = 'film', extended_details = TRUE)
+  extended_details set to true might be returning a larger dataframe.}
+
+\item{type}{character. Type of id, like customer_id, author_id, song_id etc.}
+
+\item{id_col}{character. The name of the argument to the original function
+that acts like id.}
 }
 \description{
 Decorate the slow function to enable caching
