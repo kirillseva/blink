@@ -22,7 +22,7 @@ that acts like id.}
 
 \item{strategy}{function. Blink will turn your function into a vectorized
   version, and will use this function to recombine the results.
-  Default is dplyr::bind_rows %>% as.data.frame}
+  Default is dplyr::bind_rows}
 }
 \description{
 Decorate the slow function to enable caching

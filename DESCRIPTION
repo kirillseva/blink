@@ -16,9 +16,11 @@ Imports:
     yaml,
     crayon,
     digest,
-    dplyr
+    dplyr,
+    Rcpp (>= 0.12.1)
 Suggests:
     microbenchmark,
     testthat,
     devtools
 Roxygen: list(wrap = FALSE)
+LinkingTo: Rcpp

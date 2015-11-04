@@ -10,7 +10,7 @@
 #'   extended_details set to true might be returning a larger dataframe.
 #' @param strategy function. Blink will turn your function into a vectorized
 #'   version, and will use this function to recombine the results.
-#'   Default is dplyr::bind_rows %>% as.data.frame
+#'   Default is dplyr::bind_rows
 #'
 #' @export
 decorate <- function(fun, salt = NULL, type = 'type', id_col = 'id',
