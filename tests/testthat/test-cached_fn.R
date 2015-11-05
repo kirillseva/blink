@@ -53,7 +53,7 @@ describe('Cached function is fast and has same results', {
       is_slower_than(2,
         tmp1 <- cached_fn('author', 1:5, 'other_side_of_the_moon')
       )
-      is_faster_than(0.5,
+      is_faster_than(1,
         tmp2 <- cached_fn('author', 1:5, 'other_side_of_the_moon')
       )
       expect_equal(tmp1, tmp2)
