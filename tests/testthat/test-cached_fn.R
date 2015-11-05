@@ -68,7 +68,7 @@ describe('Cached function is fast and has same results', {
       cached_fn <- decorate(get_total_song_length_for, salt = 'decade')
       tmp <- cached_fn('author', 1:ROWS, '2000')
       expect_equal(dim(tmp), c(ROWS, 2))
-      is_faster_than(0.5,
+      is_faster_than(30,
         expect_equal(tmp, cached_fn('author', 1:ROWS, '2000'))
       )
     })
