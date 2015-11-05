@@ -3,7 +3,6 @@
 export(decorate)
 import(crayon)
 import(digest)
-import(plyr)
 import(rredis)
 import(yaml)
 useDynLib(blink)
