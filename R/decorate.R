@@ -35,7 +35,7 @@ make_cached_fn <- function(fun, salt, type, id_col, strategy) {
   ## for cache invalidation or what not
   ## However if ellipsis is already present we don't need to do
   ## any dark magic
-  if(!any(grepl("...", names(formals(fun))))) {
+  if(!any(grepl("^...$", names(formals(fun))))) {
     formals(cached_fn) <- c(formals(fun), unlist(alist(... = )))
   } else { formals(cached_fn) <- formals(fun) }
   environment(cached_fn) <- list2env(list(
@@ -60,6 +60,7 @@ make_body_fn <- function() {
     type      <- call[[`__type`]]
     fun       <- `__fun`
     strategy  <- `__strategy`
+    overwrite <- isTRUE(call[['overwrite.']])
     ## for salt it's a little bit interesting
     ## we want to take a hash of all params that are part of the salt
     ## and it should be deterministic with respect to sorting
@@ -72,11 +73,12 @@ make_body_fn <- function() {
     ## lapply over all ids and retrieve data
     result <- lapply(ids, function(i, type) {
       key <- make_key(i, type)
-      if (blink:::`exists_in_cache?`(key, salt)) {
+      if (!overwrite && blink:::`exists_in_cache?`(key, salt)) {
         blink:::get_from_cache(key, salt)
       } else {
         args <- call
         args[[`__id_col`]] <- i
+        # strip banned names out of the function call
         vapply(BANNED_NAMES, function(nm) { args[[nm]] <<- NULL; TRUE }, logical(1))
         content <- do.call(fun, args)
         blink:::set_cache(key, salt, content)

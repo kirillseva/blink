@@ -4,7 +4,7 @@ get_song_count_for <- function(type, id, album) {
   setNames(data.frame(id, 12), c(paste0(type, '_id'), 'songs'))
 }
 
-get_bigdata_for <- function(type, id) {
+get_bigdata_for <- function(type, id, ...) {
   name <- if (id %% 2 == 0) 'John' else 'Jane'
   # some really big data
   ret <- data.frame(matrix(0.4242, nrow = 1, ncol = 1e4))
