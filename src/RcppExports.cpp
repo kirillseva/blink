@@ -5,13 +5,14 @@
 
 using namespace Rcpp;
 
-// rcpp_hello_world
-List rcpp_hello_world();
-RcppExport SEXP blink_rcpp_hello_world() {
+// fast_rbind_fill
+List fast_rbind_fill(List lst);
+RcppExport SEXP blink_fast_rbind_fill(SEXP lstSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    __result = Rcpp::wrap(rcpp_hello_world());
+    Rcpp::traits::input_parameter< List >::type lst(lstSEXP);
+    __result = Rcpp::wrap(fast_rbind_fill(lst));
     return __result;
 END_RCPP
 }
