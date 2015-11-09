@@ -11,7 +11,11 @@ recombinator.default <- function(lst) {
 }
 
 recombinator.data.frame <- function(lst) {
-  as.data.frame(dplyr::bind_rows(lst))
+  if (isTRUE(require(dplyr, quietly = TRUE))) {
+    as.data.frame(dplyr::bind_rows(lst))
+  } else if (isTRUE(require(plyr, quietly = TRUE))) {
+    plyr::rbind.fill
+  } else rbind
 }
 
 recombinator.list <- recombinator.data.frame
