@@ -5,7 +5,7 @@
 \title{Decorate the slow function to enable caching}
 \usage{
 decorate(fun, salt = NULL, type = "type", id_col = "id",
-  strategy = function(...) as.data.frame(dplyr::bind_rows(...)))
+  strategy = recombinator)
 }
 \arguments{
 \item{fun}{function. Function to be wrapped around a caching layer.}
@@ -22,7 +22,7 @@ that acts like id.}
 
 \item{strategy}{function. Blink will turn your function into a vectorized
   version, and will use this function to recombine the results.
-  Default is dplyr::bind_rows}
+  A sensible default is provided for common classes.}
 }
 \description{
 Decorate the slow function to enable caching

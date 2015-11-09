@@ -16,3 +16,11 @@ get_bigdata_for <- function(type, id, ...) {
 get_total_song_length_for <- function(type, id, decade) {
   setNames(data.frame(id, 228), c(paste0(type, '_id'), 'minutes'))
 }
+
+weird_fn <- function(id, type) {
+  structure(id, class='weird')
+}
+
+get_numeric_song_length_for <- function(type, id, decade) {
+  setNames(228, 'minutes')
+}

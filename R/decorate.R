@@ -10,11 +10,11 @@
 #'   extended_details set to true might be returning a larger dataframe.
 #' @param strategy function. Blink will turn your function into a vectorized
 #'   version, and will use this function to recombine the results.
-#'   Default is dplyr::bind_rows
+#'   A sensible default is provided for common classes.
 #'
 #' @export
 decorate <- function(fun, salt = NULL, type = 'type', id_col = 'id',
-    strategy = function(...) as.data.frame(dplyr::bind_rows(...))) {
+    strategy = recombinator) {
   verify_args(fun, salt, type, id_col, strategy)
   verify_formals(fun)
   make_cached_fn(fun, salt, type, id_col, strategy)

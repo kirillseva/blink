@@ -1,4 +1,4 @@
-context('Cached function')
+context('cached function')
 
 describe('Cached function is fast and has same results', {
   test_that('Some arguments are reserved', {
