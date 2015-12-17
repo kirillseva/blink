@@ -1,6 +1,6 @@
 #' Describe the package.
 #'
 #' @name blink
-#' @import rredis yaml crayon digest
+#' @import rredis yaml crayon digest purrr
 #' @docType package
 NULL

@@ -3,5 +3,6 @@
 export(decorate)
 import(crayon)
 import(digest)
+import(purrr)
 import(rredis)
 import(yaml)

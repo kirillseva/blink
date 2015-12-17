@@ -1,6 +1,7 @@
 set_cache <- function(key, salt, content) {
   redis_connect()
   rredis::redisHMSet(key, setNames(list(content), salt))
+  content
 }
 
 get_from_cache <- function(key, salt) {

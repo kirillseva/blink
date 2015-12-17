@@ -15,10 +15,10 @@ Imports:
     rredis,
     yaml,
     crayon,
-    digest
+    digest,
+    purrr
 Suggests:
     microbenchmark,
     testthat,
-    devtools,
-    dplyr
+    devtools
 Roxygen: list(wrap = FALSE)

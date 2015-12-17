@@ -31,7 +31,8 @@ describe('Cached function is fast and has same results', {
 
   test_that('Can use a different recombination strategy', {
     with_redis({
-      cached_fn <- decorate(get_song_count_for, salt = 'album', strategy = plyr::rbind.fill)
+      cached_fn <- decorate(get_song_count_for, salt = 'album',
+        strategy = function(x, fn) { plyr::rbind.fill(lapply(x, fn)) })
       expect_equal(
         cached_fn('author', 1, 'other_side_of_the_moon'),
         tmp1 <- get_song_count_for('author', 1, 'other_side_of_the_moon')
@@ -65,7 +66,7 @@ describe('Cached function is fast and has same results', {
   })
 
   test_that('We can store big datasets', {
-    # Performance/regression tests on Travis are not a good idea
+    # Performance/regression tests on Travis is not a good idea
     skip_on_travis()
     with_redis({
       cached_fn <- decorate(get_bigdata_for)
@@ -78,7 +79,7 @@ describe('Cached function is fast and has same results', {
   })
 
   test_that('We can store a bunch of ids', {
-    # Performance/regression tests on Travis are not a good idea
+    # Performance/regression tests on Travis is not a good idea
     skip_on_travis()
     with_redis({
       ROWS <- 1e4

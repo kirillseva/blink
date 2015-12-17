@@ -5,7 +5,7 @@
 \title{Decorate the slow function to enable caching}
 \usage{
 decorate(fun, salt = NULL, type = "type", id_col = "id",
-  strategy = recombinator)
+  strategy = function(...) {     as.data.frame(purrr::map_df(...)) })
 }
 \arguments{
 \item{fun}{function. Function to be wrapped around a caching layer.}
@@ -20,9 +20,11 @@ extended_details set to true might be returning a larger dataframe.}
 \item{id_col}{character. The name of the argument to the original function
 that acts like id.}
 
-\item{strategy}{function. Blink will turn your function into a vectorized
-  version, and will use this function to recombine the results.
-  A sensible default is provided for common classes.}
+\item{strategy}{function. Execution strategy. Blinck will map over the supplied
+  ids and then intelligently choose whether to pull from cache or compute from scrath.
+  This functions signature is \code{fn(ids, fn)}, where ids are the ids you've passed in,
+  and fn is the extraction function, that computes/reads individual value from cache.
+  Default is \code{purrr:::map_df}}
 }
 \description{
 Decorate the slow function to enable caching

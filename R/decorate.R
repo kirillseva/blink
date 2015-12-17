@@ -8,13 +8,15 @@
 #'   original function that modify the results. For example, in
 #'   get_movie_details(id = 100, type = 'film', extended_details = TRUE)
 #'   extended_details set to true might be returning a larger dataframe.
-#' @param strategy function. Blink will turn your function into a vectorized
-#'   version, and will use this function to recombine the results.
-#'   A sensible default is provided for common classes.
+#' @param strategy function. Execution strategy. Blinck will map over the supplied
+#'   ids and then intelligently choose whether to pull from cache or compute from scrath.
+#'   This functions signature is \code{fn(ids, fn)}, where ids are the ids you've passed in,
+#'   and fn is the extraction function, that computes/reads individual value from cache.
+#'   Default is \code{purrr:::map_df}
 #'
 #' @export
 decorate <- function(fun, salt = NULL, type = 'type', id_col = 'id',
-    strategy = recombinator) {
+    strategy = function(...) { as.data.frame(purrr::map_df(...)) }) {
   verify_args(fun, salt, type, id_col, strategy)
   verify_formals(fun)
   make_cached_fn(fun, salt, type, id_col, strategy)
@@ -43,8 +45,7 @@ make_cached_fn <- function(fun, salt, type, id_col, strategy) {
     `__id_col` = id_col, `__strategy` = strategy
   ), parent = environment(fun))
   body(cached_fn) <- make_body_fn()
-  class(cached_fn) <- c(class(cached_fn), 'blink_cached_fn')
-  cached_fn
+  `class<-`(cached_fn, c(class(cached_fn), 'blink_cached_fn'))
 }
 
 make_body_fn <- function() {
@@ -70,8 +71,8 @@ make_body_fn <- function() {
     ## make sure ids are not NA
     stopifnot(all(!is.na(ids)) && length(ids) > 0)
 
-    ## lapply over all ids and retrieve data
-    result <- as.data.frame(purrr::map_df(ids, function(i) {
+    ## map over all ids and retrieve data
+    strategy(ids, function(i) {
       key <- make_key(i, type)
       if (!overwrite && blink:::`exists_in_cache?`(key, salt)) {
         blink:::get_from_cache(key, salt)
@@ -80,11 +81,8 @@ make_body_fn <- function() {
         args[[`__id_col`]] <- i
         # strip banned names out of the function call
         vapply(BANNED_NAMES, function(nm) { args[[nm]] <<- NULL; TRUE }, logical(1))
-        content <- do.call(fun, args)
-        blink:::set_cache(key, salt, content)
-        content
+        blink:::set_cache(key, salt, do.call(fun, args))
       }
-    }))
-    # strategy(result)
+    })
   })
 }
