@@ -71,7 +71,7 @@ make_body_fn <- function() {
     stopifnot(all(!is.na(ids)) && length(ids) > 0)
 
     ## lapply over all ids and retrieve data
-    result <- lapply(ids, function(i, type) {
+    result <- as.data.frame(purrr::map_df(ids, function(i) {
       key <- make_key(i, type)
       if (!overwrite && blink:::`exists_in_cache?`(key, salt)) {
         blink:::get_from_cache(key, salt)
@@ -84,7 +84,7 @@ make_body_fn <- function() {
         blink:::set_cache(key, salt, content)
         content
       }
-    }, type = type)
-    strategy(result)
+    }))
+    # strategy(result)
   })
 }
